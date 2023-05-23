@@ -3,15 +3,23 @@ Number.prototype.toRadians = function() {
   return this * Math.PI / 180;
 };
 
-
+//EU_circo;code_region;region;chef_lieu;num_dpt;nom_ddpt;pref;num_circ;nom_commune;codes_postaux;code_insee;latitude;longitude;dist
 // Calculates the distance between Grenoble and the given city
 function distanceFromGrenoble(city)
 {
   console.log("distanceFromGrenoble - implement me !");
   var GrenobleLat = 45.166667;
   var GrenobleLong = 5.716667;
+  let R = 6371e3;
+  let latOne = city.latitude.toRadians();
+  let latTwo = GrenobleLat.toRadians();
+  let latFinale = (latTwo - latOne).toRadians();
+  let lonFinale = (GrenobleLong - city.longitude).toRadians();
 
-  return 1;
+  let a = Math.sin(latFinale/2) * Math.sin(latFinale/2) + Math.cos(latOne) * Math.cos(latTwo) * Math.sin(lonFinale/2) * Math.sin(lonFinale/2);
+  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distanceFinale = R * c;
+  return distanceFinale;
 }
 
 // Swap 2 values in array csvData
@@ -20,6 +28,9 @@ function distanceFromGrenoble(city)
 function swap(i,j)
 {
   displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
+  let tmp = i;
+  i = j;
+  j = tmp;
   console.log("swap - implement me !");
 
 }
@@ -31,6 +42,10 @@ function isLess(i, j)
 {
   displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
   console.log("isLess - implement me !");
+  if(distanceFromGrenoble(i) < distanceFromGrenoble(j))
+  {
+    return true;
+  }
 }
 
 
