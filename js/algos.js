@@ -2,19 +2,20 @@
 Number.prototype.toRadians = function() {
   return this * Math.PI / 180;
 };
+let compteurIsLess = 0;
+let compteurSwap = 0;
 
-//EU_circo;code_region;region;chef_lieu;num_dpt;nom_ddpt;pref;num_circ;nom_commune;codes_postaux;code_insee;latitude;longitude;dist
+
 // Calculates the distance between Grenoble and the given city
 function distanceFromGrenoble(city)
 {
-  console.log("distanceFromGrenoble - implement me !");
-  var GrenobleLat = 45.166667;
-  var GrenobleLong = 5.716667;
+  let GrenobleLat = 45.166667;
+  let GrenobleLong = 5.716667;
   let R = 6371e3;
-  let latOne = city.latitude.toRadians();
-  let latTwo = GrenobleLat.toRadians();
-  let latFinale = (latTwo - latOne).toRadians();
-  let lonFinale = (GrenobleLong - city.longitude).toRadians();
+  let latOne = city.latitude * Math.PI / 180;
+  let latTwo = GrenobleLat * Math.PI / 180;
+  let latFinale = (latTwo - latOne) * Math.PI / 180;
+  let lonFinale = (GrenobleLong - city.longitude) * Math.PI / 180;
 
   let a = Math.sin(latFinale/2) * Math.sin(latFinale/2) + Math.cos(latOne) * Math.cos(latTwo) * Math.sin(lonFinale/2) * Math.sin(lonFinale/2);
   let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -28,11 +29,11 @@ function distanceFromGrenoble(city)
 function swap(i,j)
 {
   displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
-  let tmp = i;
-  i = j;
-  j = tmp;
-  console.log("swap - implement me !");
-
+  let tmp = csvData[i];
+  csvData[i] = csvData[j];
+  csvData[j] = tmp;
+  compteurSwap++;
+  console.log("Compteur swap : ", compteurSwap);
 }
 
 // Returns true if city with index i in csvData is closer to Grenoble than city with index j
@@ -41,27 +42,56 @@ function swap(i,j)
 function isLess(i, j)
 {
   displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
-  console.log("isLess - implement me !");
   if(distanceFromGrenoble(i) < distanceFromGrenoble(j))
   {
     return true;
   }
+  compteurIsLess++;
+  console.log("Compteur isLess :", compteurIsLess);
 }
 
 
 function insertsort()
 {
-  console.log("insertsort - implement me !");
+  let j = 0;
+  let stockElement;
+  for(let i = 0; i < csvData.length; i++)
+  {
+    j = i;
+    stockElement = csvData[i];
+    while(j > 0 && !isLess(csvData[j - 1], stockElement))
+    {
+      swap(j, j - 1);
+      j--;
+      stockElement = csvData[j];
+    }
+  }
+
 }
 
 function selectionsort()
 {
-  console.log("selectionsort - implement me !");
+  for(let i = 0; i < csvData.length - 2; i++)
+  {
+    let min = i;
+    for(let j = i + 1; j < csvData.length; j++)
+    {
+      if(isLess(csvData[j], csvData[min]))
+      {
+        min = j
+      }
+    }
+    if(min !== i)
+    {
+      swap(min, i);
+    }
+  }
 }
 
 function bubblesort()
 {
   console.log("bubblesort - implement me !");
+
 }
 
 function shellsort()
