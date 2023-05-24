@@ -28,12 +28,11 @@ function distanceFromGrenoble(city)
 // j is the index of the second city
 function swap(i,j)
 {
-  displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
+  //displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
   let tmp = csvData[i];
   csvData[i] = csvData[j];
   csvData[j] = tmp;
   compteurSwap++;
-  console.log("Compteur swap : ", compteurSwap);
 }
 
 // Returns true if city with index i in csvData is closer to Grenoble than city with index j
@@ -41,31 +40,30 @@ function swap(i,j)
 // j is the index of the second city
 function isLess(i, j)
 {
-  displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
-  if(distanceFromGrenoble(i) < distanceFromGrenoble(j))
+  //displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
+  if(distanceFromGrenoble(csvData[i]) < distanceFromGrenoble(csvData[j]))
   {
     return true;
   }
   compteurIsLess++;
-  console.log("Compteur isLess :", compteurIsLess);
 }
 
 
-function insertsort()
+function insertsort(gap = 1, begin = 0)
 {
   let j = 0;
   let stockElement;
-  for(let i = 0; i < csvData.length; i++)
+  for(begin; begin < csvData.length; begin+=gap)
   {
-    j = i;
-    stockElement = csvData[i];
-    while(j > 0 && !isLess(csvData[j - 1], stockElement))
+    j = begin;
+    while(j > 0 && !isLess(j - 1, j))
     {
       swap(j, j - 1);
       j--;
-      stockElement = csvData[j];
     }
   }
+  /*console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);*/
 
 }
 
@@ -76,7 +74,7 @@ function selectionsort()
     let min = i;
     for(let j = i + 1; j < csvData.length; j++)
     {
-      if(isLess(csvData[j], csvData[min]))
+      if(isLess(j, min))
       {
         min = j
       }
@@ -86,17 +84,56 @@ function selectionsort()
       swap(min, i);
     }
   }
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
 }
 
 function bubblesort()
 {
-  console.log("bubblesort - implement me !");
+  //Version 1
+  /*for(let i = csvData.length; i > 1; i--)
+  {
+    for(let j = 0; j < i -1; j++)
+    {
+      if(isLess(j + 1, j))
+      {
+        swap(j+1, j);
+      }
+    }
+  }*/
 
+  //Version 2
+  let nbPassage = 0;
+  let triOk = false;
+  do
+  {
+    triOk = false;
+    for(let i = 0; i < csvData.length - 1 - nbPassage; i++)
+    {
+      if(isLess(i+1, i))
+      {
+        swap(i, i+1);
+        triOk = true;
+      }
+    }
+    nbPassage++;
+  } while(triOk);
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
 }
 
 function shellsort()
 {
-  console.log("shellsort - implement me !");
+  let tabInterval = [7,4,2,1];
+  for(let gap = 0; gap < tabInterval.length; gap++)
+  {
+    for(let begin = 0; begin < tabInterval[gap]; begin++)
+    {
+      insertsort(tabInterval[gap], begin);
+    }
+  }
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
 }
 
 function mergesort()
