@@ -28,7 +28,7 @@ function distanceFromGrenoble(city)
 // j is the index of the second city
 function swap(i,j)
 {
-  //displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
+  displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
   let tmp = csvData[i];
   csvData[i] = csvData[j];
   csvData[j] = tmp;
@@ -40,7 +40,7 @@ function swap(i,j)
 // j is the index of the second city
 function isLess(i, j)
 {
-  //displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
+  displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
   if(distanceFromGrenoble(csvData[i]) < distanceFromGrenoble(csvData[j]))
   {
     return true;
@@ -67,6 +67,24 @@ function insertsort(gap = 1, begin = 0)
 
 }
 
+function insertsortWhile(gap = 1, begin = 0)
+{
+    let j = 0;
+    let stockElement;
+    while(begin < csvData.length)
+    {
+      j = begin;
+      while(j > 0 && !isLess(j - 1, j))
+      {
+        swap(j, j - 1);
+        j--;
+      }
+      begin +=gap;
+    }
+    /*console.log("Compteur isLess :", compteurIsLess);
+    console.log("Compteur swap : ", compteurSwap);*/
+}
+
 function selectionsort()
 {
   for(let i = 0; i < csvData.length - 2; i++)
@@ -88,20 +106,33 @@ function selectionsort()
   console.log("Compteur swap : ", compteurSwap);
 }
 
+function selectionsortWhile()
+{
+  let i = 0;
+  while(i < csvData.length - 2)
+  {
+    let min = i;
+    let j = i + 1;
+    while(j < csvData.length)
+    {
+      if(isLess(j, min))
+      {
+        min = j
+      }
+      j++
+    }
+    if(min !== i)
+    {
+      swap(min, i);
+    }
+    i++
+  }
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
+}
+
 function bubblesort()
 {
-  //Version 1
-  /*for(let i = csvData.length; i > 1; i--)
-  {
-    for(let j = 0; j < i -1; j++)
-    {
-      if(isLess(j + 1, j))
-      {
-        swap(j+1, j);
-      }
-    }
-  }*/
-
   //Version 2
   let nbPassage = 0;
   let triOk = false;
@@ -122,6 +153,30 @@ function bubblesort()
   console.log("Compteur swap : ", compteurSwap);
 }
 
+function bubblesortWhile()
+{
+  //Version 2
+  let nbPassage = 0;
+  let triOk = false;
+  do
+  {
+    triOk = false;
+    let i = 0;
+    while(i < csvData.length - 1 - nbPassage)
+    {
+      if(isLess(i+1, i))
+      {
+        swap(i, i+1);
+        triOk = true;
+      }
+      i++
+    }
+    nbPassage++;
+  } while(triOk);
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
+}
+
 function shellsort()
 {
   let tabInterval = [7,4,2,1];
@@ -131,6 +186,24 @@ function shellsort()
     {
       insertsort(tabInterval[gap], begin);
     }
+  }
+  console.log("Compteur isLess :", compteurIsLess);
+  console.log("Compteur swap : ", compteurSwap);
+}
+
+function shellsortWhile()
+{
+  let tabInterval = [7,4,2,1];
+  let gap = 0;
+  while(gap < tabInterval.length)
+  {
+    let begin = 0;
+    while(begin < tabInterval[gap])
+    {
+      insertsortWhile(tabInterval[gap], begin);
+      begin++;
+    }
+    gap++;
   }
   console.log("Compteur isLess :", compteurIsLess);
   console.log("Compteur swap : ", compteurSwap);
@@ -160,10 +233,10 @@ function sort(algo)
 {
   switch (algo)
   {
-    case 'insert': insertsort();break;
-    case 'select': selectionsort();break;
-    case 'bubble': bubblesort();break;
-    case 'shell': shellsort();break;
+    case 'insert': insertsortWhile();break;
+    case 'select': selectionsortWhile();break;
+    case 'bubble': bubblesortWhile();break;
+    case 'shell': shellsortWhile();break;
     case 'merge': mergesort();break;
     case 'heap': heapsort();break;
     case 'quick': quicksort();break;
