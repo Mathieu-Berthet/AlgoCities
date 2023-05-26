@@ -219,9 +219,35 @@ function heapsort()
   console.log("heapsort - implement me !");
 }
 
-function quicksort()
+function partition(tab, firstElement, lastElement, pivot)
+{
+  swap(pivot, lastElement);
+
+  let j = firstElement;
+  for(let i = firstElement; i < lastElement; i++)
+  {
+    if(isLess(i, lastElement))
+    {
+      swap(i,j);
+      j++;
+    }
+  }
+  swap(lastElement, j);
+  return j;
+
+}
+
+function quicksort(tab, firstElem, lastElem)
 {
   console.log("quicksort - implement me !");
+  if(firstElem < lastElem)
+  {
+    let pivot = lastElem;
+    pivot = partition(tab, firstElem, lastElem, pivot);
+    quicksort(tab, firstElem, pivot-1);
+    quicksort(tab, pivot+1, lastElem);
+  }
+
 }
 function quick3sort()
 {
@@ -239,7 +265,7 @@ function sort(algo)
     case 'shell': shellsortWhile();break;
     case 'merge': mergesort();break;
     case 'heap': heapsort();break;
-    case 'quick': quicksort();break;
+    case 'quick': quicksort(csvData, 0, csvData.length - 1);break;
     case 'quick3': quick3sort();break;
     default: throw 'Invalid algorithm ' + algo;
   }
